@@ -13,12 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.groepc.airport.airport.Airport;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,9 +35,7 @@ public class ItemsListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
 
-    private RecyclerView airportListView;
-    private AirportCursorAdapter airportCursorAdapter;
-    ArrayList list;
+    private AirportsDatabase adb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,34 +56,13 @@ public class ItemsListActivity extends AppCompatActivity {
         });
 
 
-        list = new ArrayList<String>();
+        adb = new AirportsDatabase(this);
 
 
         View recyclerView = findViewById(R.id.items_list);
         assert recyclerView != null;
 
-        // Inflate listview
-        //airportListView = (ListView) findViewById(R.id.items_list);
-
-        // Init database and query
-        AirportsDatabase adb = new AirportsDatabase(this);
-        Cursor cursor = adb.getAirports("NL");
-
-        cursor.moveToFirst();
-        while( cursor.moveToNext() ) {
-            String str = cursor.getString(cursor.getColumnIndex("icao"));
-            list.add(str);
-
-        }
         setupRecyclerView((RecyclerView) recyclerView);
-
-        ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(),
-                android.R.layout.simple_list_item_1,
-                list);
-        //airportListView.setAdapter(adapter);
-
-        adapter.notifyDataSetChanged();
-
 
         if (findViewById(R.id.items_detail_container) != null) {
             // The detail container view will be present only in the
@@ -99,7 +74,7 @@ public class ItemsListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Airport.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter());
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -107,8 +82,17 @@ public class ItemsListActivity extends AppCompatActivity {
 
         private final List<Airport.AirportItem> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<Airport.AirportItem> items) {
-            mValues = items;
+        public SimpleItemRecyclerViewAdapter() {
+            Cursor cursor = adb.getAirports("NL");
+            cursor.moveToFirst();
+            System.out.println("teetertertertre");
+            while( cursor.moveToNext() ) {
+                System.out.println("while loooop");
+                System.out.print(cursor);
+                Airport.addItem(cursor.getString(cursor.getColumnIndex("icao")), cursor.getString(cursor.getColumnIndex("name")), "Wij zijn slim");
+            }
+            mValues = Airport.ITEMS;
+
         }
 
         @Override

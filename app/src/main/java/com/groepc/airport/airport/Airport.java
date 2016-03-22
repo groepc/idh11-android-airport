@@ -1,10 +1,5 @@
 package com.groepc.airport.airport;
 
-import android.database.Cursor;
-
-import com.groepc.airport.AirportsDatabase;
-import com.groepc.airport.ItemsListActivity;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,21 +25,11 @@ public class Airport {
 
     private static final int COUNT = 25;
 
-    static {
-        AirportsDatabase adb = new AirportsDatabase(ItemsListActivity.this.getBaseContext());
-        Cursor cursor = adb.getAirports("NL");
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(createAirportItem(i));
-        }
-    }
 
-    private static void addItem(AirportItem item) {
+    public static void addItem(String id, String content, String details) {
+        AirportItem item = new AirportItem(id, content, details);
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
-    }
-
-    private static AirportItem createAirportItem(int position) {
-        return new AirportItem(String.valueOf(position), "Item " + position, makeDetails(position));
     }
 
     private static String makeDetails(int position) {
@@ -60,6 +45,7 @@ public class Airport {
      * A dummy item representing a piece of content.
      */
     public static class AirportItem {
+
         public final String id;
         public final String content;
         public final String details;
@@ -74,5 +60,6 @@ public class Airport {
         public String toString() {
             return content;
         }
+
     }
 }
