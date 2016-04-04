@@ -20,6 +20,12 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <include layout="@layout/items_list" />
+
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchView"
+            android:layout_gravity="left|top" />
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
